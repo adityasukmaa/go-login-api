@@ -66,13 +66,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user models.MUser
-	if err := configs.DB.First(&user, "email = ?", login.Email).Error; err != nil {
-		helpers.Response(w, 404, "Wrong Email or Password", nil)
+	if err := configs.DB.First(&user, "username = ?", login.Username).Error; err != nil {
+		helpers.Response(w, 404, "Wrong Username or Password", nil)
 		return
 	}
 
 	if err := helpers.VerifyPassword(user.Password, login.Password); err != nil {
-		helpers.Response(w, 404, "Wrong Email or Password", nil)
+		helpers.Response(w, 404, "Wrong Username or Password", nil)
 		return
 	}
 
