@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-	// app.Get( path: "/swagger/*", swagger.HandlerDefault)
 	configs.ConnectDB()
 
 	allowedOrigins := []string{"*"}
@@ -30,16 +29,6 @@ func main() {
 	r.Use(cors)
 
 	router := r.PathPrefix("/api").Subrouter().StrictSlash(true)
-	router2 := r.PathPrefix("/apiv2").Subrouter().StrictSlash(true)
-
-	// Menambahkan middleware CORS ke dalam sub-router `/api`
-	// corsHandler := cors.New(cors.Options{
-	// 	AllowedOrigins:   allowedOrigins, // Mengizinkan semua origin
-	// 	AllowedMethods:   allowedMethods,
-	// 	AllowedHeaders:   allowedHeaders,
-	// 	AllowCredentials: true,
-	// })
-	// router.Use(corsHandler.Handler)
 
 	// Menambahkan rute untuk ping
 	router.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +39,6 @@ func main() {
 
 	routes.AuthRoutes(router)
 	routes.UsersRoutes(router)
-	routes.AuthRoutes(router2)
 
 	fmt.Println("Server running on port 8080")
 	http.ListenAndServe("0.0.0.0:8080", cors(r))

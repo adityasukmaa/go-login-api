@@ -3,7 +3,6 @@ package helpers
 import (
 	"fmt"
 	"go-login-api/models"
-	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,38 +11,18 @@ import (
 var mySigningKey = []byte("mysecretkey")
 
 type MyCustomClaims struct {
-	ID           int64  `json:"id"`
-	Username     string `json:"username"`
-	Name         string `json:"name"`
-	Email        string `json:"email"`
-	PhoneNumber  string `json:"phone_number"`
-	SessionLogin string `json:"session_login"`
-	Gender       string `json:"gender"`
-	Photo        string `json:"photo"`
-	BirthPlace   string `json:"birth_place"`
-	EmployeeID   string `json:"employee_id"`
-	EmployeeType string `json:"employee_type"`
-	BirthDate    string `json:"birth_date"`
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
 
 	jwt.RegisteredClaims
 }
 
 func CreateToken(user *models.MUser) (string, error) {
 	claims := MyCustomClaims{
-		user.ID,
-		user.Username,
-		user.Name,
-		user.Email,
-		user.PhoneNumber,
-		user.SessionLogin,
-		user.Gender,
-		user.Photo,
-		user.BirthPlace,
-		user.EmployeeID,
-		user.EmployeeType,
-		user.BirthDate,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
+		ID:       user.ID,
+		Username: user.Username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(5 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 		},
@@ -55,19 +34,25 @@ func CreateToken(user *models.MUser) (string, error) {
 	return ss, err
 }
 
-func ValidateToken(tokenString string) (any, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+func ValidateToken(tokenStr string) (*MyCustomClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return mySigningKey, nil
 	})
+
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	claims, ok := token.Claims.(*MyCustomClaims)
-
-	if !ok || !token.Valid {
-		return nil, fmt.Errorf("unauthorized token")
+	if claims, ok := token.Claims.(*MyCustomClaims); ok && token.Valid {
+		return claims, nil
+	} else {
+		return nil, err
 	}
+}
 
-	return claims, nil
+// GenerateImageURL generates a URL to access the user's photo with an API key.
+func GenerateImageURL(userID int, fileName string) string {
+	baseURL := "http://localhost:8080/users/photo"
+	apiKey := "mysecretkey" // replace with the method to retrieve the actual API token
+	return fmt.Sprintf("%s/%d/%s?apikey=%s", baseURL, userID, fileName, apiKey)
 }

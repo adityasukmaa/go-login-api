@@ -6,7 +6,6 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
-	github.com/rs/cors v1.11.0
 	github.com/swaggo/swag v1.16.3
 	golang.org/x/crypto v0.25.0
 	gorm.io/driver/postgres v1.5.9

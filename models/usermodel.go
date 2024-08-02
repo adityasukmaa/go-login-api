@@ -41,16 +41,13 @@ type Login struct {
 }
 
 type MyProfile struct {
-	ID           int64  `json:"id"`
-	Username     string `json:"username"`
-	Email        string `json:"email"`
-	Name         string `json:"name"`
-	PhoneNumber  string `json:"phone_number"`
-	SessionLogin string `json:"session_login"`
-	Gender       string `json:"gender"`
-	Photo        string `json:"photo"`
-	BirthPlace   string `json:"birth_place"`
-	EmployeeID   string `json:"employee_id"`
-	EmployeeType string `json:"employee_type"`
-	BirthDate    string `json:"birth_date"`
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Username    string `json:"username"`
+	Email       string `json:"email"`
+	PhoneNumber string `json:"phone_number"`
+	Gender      string `json:"gender"`
+	BirthPlace  string `json:"birth_place"`
+	BirthDate   string `json:"birth_date"`
+	PhotoURL    string `json:"photo_url"`
 }
